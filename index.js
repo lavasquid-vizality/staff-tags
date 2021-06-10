@@ -8,7 +8,7 @@ import { OverflowTooltip } from './components/OverflowTooltip';
 import { defaultSettings } from './constants';
 
 const { headerTagNoNickname, headerTagWithNickname } = getModule('headerTag');
-const { nameTag } = getModule('nameTag', 'additionalActionsIcon');
+const { nameTagWithCustomStatus, nameTagNoCustomStatus } = getModule('nameTag', 'additionalActionsIcon');
 
 function DefaultSettings (settingsSet) {
   for (const [ key, value ] of Object.entries(defaultSettings)) {
@@ -75,7 +75,7 @@ export default class extends Plugin {
       return res;
     });
     patch(getModule(m => m?.default?.displayName === 'NameTag'), 'default', (args, res) => {
-      const { userId, guildId, className } = args[0];
+      const { guildId, userId, className } = args[0];
 
       const SettingsPreview = location.pathname === '/vizality/plugins/staff-tags';
       if ((userId && guildId && guildId !== '@me') || SettingsPreview) {
@@ -83,7 +83,7 @@ export default class extends Plugin {
           ? 'UserPopout'
           : (className === headerTagWithNickname && this.settings.get('UPShow', true))
             ? 'UserPopoutNick'
-            : (className === nameTag && this.settings.get('UMShow', true))
+            : ((className === nameTagWithCustomStatus || className === nameTagNoCustomStatus) && this.settings.get('UMShow', true))
               ? 'UserModal'
               : 'None';
 
