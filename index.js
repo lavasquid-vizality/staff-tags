@@ -34,7 +34,7 @@ export default class extends Plugin {
         className: getModule('overflow').overflow,
         'aria-label': false
       };
-      res.props.name.props.children = <OverflowTooltip text={name} {...overflowProps} />;
+      res.props.name.props.children = <OverflowTooltip text={name} tooltipText={name} {...overflowProps} />;
 
       return res;
     });
