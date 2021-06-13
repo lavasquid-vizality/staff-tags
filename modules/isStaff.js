@@ -7,6 +7,7 @@ import { FakeBotTagTooltip } from '../components/FakeBotTagTooltip';
 
 const { Permissions } = getModule('Permissions');
 const { getGuild } = getModule(m => m?._dispatchToken && m?.getGuild);
+const { getGuildId } = getModule('getGuildId', 'getLastSelectedGuildId');
 const { getMember } = getModule(m => m?._dispatchToken && m?.getMember);
 
 function getTooltip (isOwner, isStaff, place, { Owner, Admin, Management, Icons = false }) {
@@ -22,8 +23,9 @@ function getTooltip (isOwner, isStaff, place, { Owner, Admin, Management, Icons 
   }
 }
 
-export default (guildId, userId, place, SettingsPreview, ...args) => {
-  if (place === 'None') return;
+export default (userId, place, SettingsPreview, ...args) => {
+  const guildId = getGuildId();
+  if (place === 'None' || (!guildId || guildId === '@me') && !SettingsPreview) return;
 
   if (SettingsPreview) {
     const tags = [];

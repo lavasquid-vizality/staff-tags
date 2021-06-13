@@ -47,7 +47,6 @@ export default class extends Plugin {
         if (child?.props.text === 'Server Owner') res.props.children[index] = null;
       }
 
-      const { guildId } = res._owner.pendingProps;
       const userId = res._owner.pendingProps.user.id;
 
       const tagNames = {
@@ -56,29 +55,22 @@ export default class extends Plugin {
         Management: this.settings.get('TNManagement', 'Management'),
         Icons: this.settings.get('TNIcons')
       };
-      const FakeBotTagTooltip = isStaff(guildId, userId, 'MemberList', location.pathname === '/vizality/plugins/staff-tags', tagNames);
+      const FakeBotTagTooltip = isStaff(userId, 'MemberList', location.pathname === '/vizality/plugins/staff-tags', tagNames);
       if (FakeBotTagTooltip) res.props.children.splice(res.props.children.length - 2, 0, FakeBotTagTooltip);
 
       return res;
     });
 
-    // User Popout
-    patch(getModule(m => m?.default?.displayName === 'ConnectedUserPopout'), 'default', (args, res) => {
-      res.props.user.GuildId = args[0].guildId;
-      return res;
-    });
-
     // Name Tag (User Popout & User Modal &  ...)
     patch(getModule(m => m?.default?.displayName === 'DiscordTag'), 'default', (args, res) => {
-      res.props.guildId = args[0].user.GuildId;
       res.props.userId = args[0].user.id;
       return res;
     });
     patch(getModule(m => m?.default?.displayName === 'NameTag'), 'default', (args, res) => {
-      const { guildId, userId, className } = args[0];
+      const { userId, className } = args[0];
 
       const SettingsPreview = location.pathname === '/vizality/plugins/staff-tags';
-      if ((userId && guildId && guildId !== '@me') || SettingsPreview) {
+      if (userId || SettingsPreview) {
         const place = (className === headerTagNoNickname && this.settings.get('UPShow', true))
           ? 'UserPopout'
           : (className === headerTagWithNickname && this.settings.get('UPShow', true))
@@ -92,7 +84,7 @@ export default class extends Plugin {
           Admin: this.settings.get('TNAdmin', 'Admin'),
           Management: this.settings.get('TNManagement', 'Management')
         };
-        const FakeBotTagTooltip = isStaff(guildId, userId, place, SettingsPreview, tagNames);
+        const FakeBotTagTooltip = isStaff(userId, place, SettingsPreview, tagNames);
         if (FakeBotTagTooltip) res.props.children.push(FakeBotTagTooltip);
       }
 
