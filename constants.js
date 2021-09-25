@@ -1,21 +1,32 @@
 /* eslint-disable multiline-comment-style */
-export const CheckPermissions = Object.freeze([
-  'ADMINISTRATOR',
-  'MANAGE_CHANNELS',
-  // 'MANAGE_EMOJIS'
-  // 'MANAGE_EVENTS'
-  'MANAGE_GUILD',
-  'MANAGE_MESSAGES'
-  // 'MANAGE_NICKNAMES'
-  // 'MANAGE_ROLES'
-  // 'MANAGE_WEBHOOKS'
-]);
+import { Permissions } from '@vizality/discord/constants';
+
+export const Colors = {
+  Owner: '#FAA61A', // Gold (Owner)
+  ThreadCreator: '#FFBD00', // Lighter Gold (Thread Creator)
+  Admin: '#C0C0C0', // Silver (Admin)
+  Management: '#CD7F32' // Bronze (Management)
+};
+
+export const CheckPermissions = Object.freeze({
+  Administrator: Permissions.ADMINISTRATOR,
+  Guild: Permissions.MANAGE_GUILD,
+  Channels: Permissions.MANAGE_CHANNELS,
+  Threads: Permissions.MANAGE_THREADS,
+  Messages: Permissions.MANAGE_MESSAGES
+  // Webhooks: Permissions.MANAGE_WEBHOOKS,
+  // Events: Permissions.MANAGE_EVENTS,
+  // Roles: Permissions.MANAGE_ROLES,
+  // EmojisAndStickers: Permissions.MANAGE_EMOJIS_AND_STICKERS,
+  // Nicknames: Permissions.MANAGE_NICKNAMES
+});
 
 export const defaultSettings = Object.freeze({
   TNOwner: 'Owner',
+  TNThreadCreator: 'Thread Creator',
   TNAdmin: 'Admin',
   TNManagement: 'Management',
-  Icons: false,
+  TNIcons: false,
   MLShow: true,
   UPShow: true,
   UMShow: true

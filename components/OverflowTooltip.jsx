@@ -1,6 +1,7 @@
 import React, { memo, createRef } from 'react';
 import { getModule } from '@vizality/webpack';
-const Tooltip = getModule(m => m?.displayName === 'Tooltip');
+
+const Tooltip = getModule(m => m.displayName === 'Tooltip');
 
 export const OverflowTooltip = memo(({ text, tooltipText, className, ...rest }) => {
   const myDiv = createRef();

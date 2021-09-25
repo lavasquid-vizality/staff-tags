@@ -1,61 +1,76 @@
-import React from 'react';
+import { isEqual } from 'lodash';
+import React, { memo } from 'react';
 import { getModule } from '@vizality/webpack';
-const { string: { toTitleCase }, object: { isEmptyObject } } = require('@vizality/util');
+import { isEmptyObject } from '@vizality/util/object';
 
-import { CheckPermissions } from '../constants';
 import { FakeBotTagTooltip } from '../components/FakeBotTagTooltip';
 
-const { Permissions } = getModule('Permissions');
-const { getGuild } = getModule(m => m?._dispatchToken && m?.getGuild);
-const { getGuildId } = getModule('getGuildId', 'getLastSelectedGuildId');
-const { getMember } = getModule(m => m?._dispatchToken && m?.getMember);
+import { CheckPermissions, defaultSettings } from '../constants';
 
-function getTooltip (isOwner, isStaff, place, { Owner, Admin, Management, Icons = false }) {
-  if (isOwner || !isEmptyObject(isStaff)) {
-    const tooltipText = isOwner
-      ? 'Server Owner'
+const { getGuild } = getModule(m => m._dispatchToken && m.getGuild);
+const { getChannel } = getModule(m => m._dispatchToken && m.getChannel);
+const { getMember } = getModule(m => m.getMember);
+const { can } = getModule(m => m.can && m.ALL);
+
+const GetTooltip = memo(({ isOwner = false, isThreadCreator = false, isStaff = {}, place = 'None', color = null, Owner, ThreadCreator, Admin, Management, Icons }) => {
+  const tooltipText = isOwner
+    ? 'Server Owner'
+    : isThreadCreator
+      ? 'Thread Creator'
       : Object.keys(isStaff).includes('Administrator')
         ? 'Administrator'
         : `Management\n(${Object.keys(isStaff).map(x => x.replace('Manage ', '')).join(', ')})`;
-    const type = isOwner ? { Owner } : Object.keys(isStaff).includes('Administrator') ? { Admin } : { Management };
+  const type = isOwner ? { Owner } : isThreadCreator ? { ThreadCreator } : Object.keys(isStaff).includes('Administrator') ? { Admin } : { Management };
 
-    return <FakeBotTagTooltip TText={tooltipText} type={type} icons={Icons} place={place} />;
-  }
-}
+  return <FakeBotTagTooltip TText={tooltipText} type={type} icons={Icons} place={place} color={color} />;
+}, (prevProps, nextProps) => {
+  return isEqual(prevProps, nextProps);
+});
 
-export default (userId, place, SettingsPreview, ...args) => {
-  const guildId = getGuildId();
-  if (place === 'None' || (!guildId || guildId === '@me') && !SettingsPreview) return;
+export default function (guildId, channelId, userId, place) {
+  const SettingsPreview = location.pathname === '/vizality/plugins/staff-tags';
+  if (place === 'None' || guildId === '@me' && !SettingsPreview) return;
+
+  const tagNames = {
+    Owner: this.settings.get('TNOwner', defaultSettings.TNOwner),
+    ThreadCreator: this.settings.get('TNThreadCreator', defaultSettings.TNThreadCreator),
+    Admin: this.settings.get('TNAdmin', defaultSettings.TNAdmin),
+    Management: this.settings.get('TNManagement', defaultSettings.TNManagement),
+    Icons: place === 'MemberList' ? this.settings.get('TNIcons', defaultSettings.TNIcons) : false
+  };
 
   if (SettingsPreview) {
     const tags = [];
 
-    tags.push(getTooltip(true, {}, place, ...args)); // Owner
-    tags.push(getTooltip(false, { Administrator: true }, place, ...args)); // Admin
+    tags.push(<GetTooltip isOwner={true} place={place} {...tagNames} />); // Owner
+    tags.push(<GetTooltip isThreadCreator={true} place={place} {...tagNames} />); // Thread Creator
+    tags.push(<GetTooltip isStaff={{ Administrator: true }} place={place} {...tagNames} />); // Admin
 
     const isStaff = {};
-    for (const permission of CheckPermissions) {
-      if (permission !== 'ADMINISTRATOR') isStaff[toTitleCase(permission)] = true;
+    for (const [ name ] of Object.entries(CheckPermissions)) {
+      if (name !== 'Administrator') isStaff[name] = true;
     }
-    tags.push(getTooltip(false, isStaff, place, ...args)); // Management (All)
+    tags.push(<GetTooltip isStaff={isStaff} place={place} {...tagNames} />); // Management (All)
 
     return <>{tags}</>;
   }
 
   const guild = getGuild(guildId);
   if (!guild) return;
+  const channel = getChannel(channelId);
+
   const isOwner = guild.isOwner(userId);
+  const isThreadCreator = channel ? channel.isThread() && channel.isOwner(userId) : false;
   const isStaff = {};
 
-  const roles = getMember(guildId, userId)?.roles;
-  if (roles) {
-    for (const role of roles) {
-      const RolePermissions = guild.getRole(role)?.permissions;
-      for (const permission of CheckPermissions) {
-        if ((RolePermissions & Permissions[permission]) === Permissions[permission].to32BitNumber()) isStaff[toTitleCase(permission)] = true;
-      }
-    }
+  for (const [ name, permission ] of Object.entries(CheckPermissions)) {
+    if (can(permission, userId, guild)) isStaff[name] = true;
   }
 
-  return getTooltip(isOwner, isStaff, place, ...args);
-};
+  const color = getMember(guildId, userId)?.colorString;
+
+  return <>
+    {isThreadCreator && <GetTooltip isThreadCreator={isThreadCreator} place={place} color={color} {...tagNames} />}
+    {(isOwner || !isEmptyObject(isStaff)) && <GetTooltip isOwner={isOwner} isStaff={isStaff} place={place} color={color} {...tagNames} />}
+  </>;
+}
