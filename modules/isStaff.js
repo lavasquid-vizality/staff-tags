@@ -7,8 +7,8 @@ import { FakeBotTagTooltip } from '../components/FakeBotTagTooltip';
 
 import { CheckPermissions, defaultSettings } from '../constants';
 
-const { getGuild } = getModule(m => m._dispatchToken && m.getGuild);
-const { getChannel } = getModule(m => m._dispatchToken && m.getChannel);
+const { getGuild } = getModule(m => m.getGuild);
+const { getChannel } = getModule(m => m.getChannel);
 const { getMember } = getModule(m => m.getMember);
 const { can } = getModule(m => m.can && m.ALL);
 
@@ -28,7 +28,7 @@ const GetTooltip = memo(({ isOwner = false, isThreadCreator = false, isStaff = {
 });
 
 export default function (guildId, channelId, userId, place) {
-  const SettingsPreview = location.pathname === '/vizality/plugins/staff-tags';
+  const SettingsPreview = location.pathname === '/vizality/plugin/staff-tags/settings';
   if (place === 'None' || guildId === '@me' && !SettingsPreview) return;
 
   const tagNames = {

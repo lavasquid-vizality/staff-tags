@@ -10,19 +10,12 @@ import isStaff from './modules/isStaff';
 import ReactPatch from './modules/ReactPatch';
 import { defaultSettings } from './constants';
 
+const { overflow } = getModule('overflow');
 const { headerTagNoNickname, headerTagWithNickname } = getModule('headerTag');
 const { nameTagWithCustomStatus, nameTagNoCustomStatus } = getModule('nameTag', 'additionalActionsIcon');
 
-function DefaultSettings (settingsSet) {
-  for (const [ key, value ] of Object.entries(defaultSettings)) {
-    settingsSet(key, value);
-  }
-}
-
 export default class extends Plugin {
   start () {
-    if (!this.settings.getKeys().length) DefaultSettings(this.settings.set);
-
     this.injectStyles('./style.css');
     this.patch();
   }
@@ -34,7 +27,7 @@ export default class extends Plugin {
       if (!name) return res;
 
       const overflowProps = {
-        className: getModule('overflow').overflow,
+        className: overflow,
         'aria-label': false
       };
       res.props.name.props.children = <OverflowTooltip text={name} tooltipText={name} {...overflowProps} />;
@@ -65,7 +58,7 @@ export default class extends Plugin {
 
       ReactPatch(res, Type => {
         ReactPatch(findInReactTree(Type, m => m.type?.displayName === 'UserPopoutInfo'), Type => {
-          ReactPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), null, { guildId, channelId, userId });
+          ReactPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), null, () => ({ guildId, channelId, userId }));
         });
       });
 
@@ -76,7 +69,7 @@ export default class extends Plugin {
       const { guildId, user: { id: userId } } = args[0];
 
       ReactPatch(findInReactTree(res, m => m.type?.displayName === 'UserProfileModalHeader'), Type => {
-        ReactPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), null, { guildId, userId }, true);
+        ReactPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), null, () => ({ guildId, userId }), true);
       });
 
       return res;
@@ -86,7 +79,7 @@ export default class extends Plugin {
     patch(getModule(m => m.default?.displayName === 'NameTag'), 'default', (args, res) => {
       const { className, guildId, channelId, userId } = args[0];
 
-      if (userId || location.pathname === '/vizality/plugins/staff-tags') {
+      if (userId || location.pathname === '/vizality/plugin/staff-tags/settings') {
         const place = (className === headerTagNoNickname && this.settings.get('UPShow', defaultSettings.UPShow))
           ? 'UserPopout'
           : (className === headerTagWithNickname && this.settings.get('UPShow', defaultSettings.UPShow))

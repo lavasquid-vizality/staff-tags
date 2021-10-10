@@ -39,16 +39,14 @@ const FakeBotTag = memo(({ place, color, className, props, text }) => {
 });
 
 export const FakeBotTagTooltip = memo(({ TText, type, icons, place, color }) => {
-  return (
-    <Tooltip className={`ST-${place} ST-${Object.keys(type)[0]}`} aria-label={false} tooltipClassName={joinClassNames('ST-Tooltip', `ST-Tooltip-${place}`, `ST-Tooltip-${Object.keys(type)[0]}`)} text={TText}>{ props => {
-      if (icons) {
-        return <Crown className={`${ownerIcon} ${icon} ST-Icon-${Object.keys(type)[0]}`} color={Colors[Object.keys(type)[0]]} {...props} />;
-      }
+  return <Tooltip className={`ST-${place} ST-${Object.keys(type)[0]}`} aria-label={false} tooltipClassName={joinClassNames('ST-Tooltip', `ST-Tooltip-${place}`, `ST-Tooltip-${Object.keys(type)[0]}`)} text={TText}>{ props => {
+    if (icons) {
+      return <Crown className={`${ownerIcon} ${icon} ST-Icon-${Object.keys(type)[0]}`} color={Colors[Object.keys(type)[0]]} {...props} />;
+    }
 
-      return <FakeBotTag place={place} color={color} className={`ST-${place} ST-${Object.keys(type)[0]}`} props={props} text={Object.values(type)[0]} />;
-    }}
-    </Tooltip>
-  );
+    return <FakeBotTag place={place} color={color} className={`ST-${place} ST-${Object.keys(type)[0]}`} props={props} text={Object.values(type)[0]} />;
+  }}
+  </Tooltip>;
 }, (prevProps, nextProps) => {
   return isEqual(prevProps, nextProps);
 });

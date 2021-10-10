@@ -1,8 +1,9 @@
-export default (oldFunction, newFunction, newArgs, patched) => {
+export default (oldFunction, newFunction, newArgsFunction, patched) => {
   const _Type = oldFunction?.type;
   if (!_Type || typeof _Type !== 'function' || _Type.patched) return;
   oldFunction.type = (...args) => {
-    if (newArgs) {
+    if (newArgsFunction) {
+      const newArgs = newArgsFunction(...args);
       args[0] = {
         ...args[0],
         ...newArgs
