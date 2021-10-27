@@ -8,9 +8,9 @@ import { FakeBotTagTooltip } from '../components/FakeBotTagTooltip';
 import { CheckPermissions, defaultSettings } from '../constants';
 
 const { getGuild } = getModule(m => m.getGuild);
-const { getChannel } = getModule(m => m.getChannel);
+const { getChannel } = getModule(m => m.getChannel && m.hasChannel);
 const { getMember } = getModule(m => m.getMember);
-const { can } = getModule(m => m.can && m.ALL);
+const { can } = getModule(m => m.can);
 
 const GetTooltip = memo(({ isOwner = false, isThreadCreator = false, isStaff = {}, place = 'None', color = null, Owner, ThreadCreator, Admin, Management, Icons }) => {
   const tooltipText = isOwner

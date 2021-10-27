@@ -1,7 +1,7 @@
-export default (oldFunction, newFunction, newArgsFunction, patched) => {
-  const _Type = oldFunction?.type;
-  if (!_Type || typeof _Type !== 'function' || _Type.patched) return;
-  oldFunction.type = (...args) => {
+export default (oldFunction, name, newFunction, newArgsFunction, patched) => {
+  const _Name = oldFunction?.[name];
+  if (!_Name || typeof _Name !== 'function' || _Name.patched) return;
+  oldFunction[name] = (...args) => {
     if (newArgsFunction) {
       const newArgs = newArgsFunction(...args);
       args[0] = {
@@ -9,10 +9,10 @@ export default (oldFunction, newFunction, newArgsFunction, patched) => {
         ...newArgs
       };
     }
-    const Type = _Type(...args);
-    if (newFunction) newFunction(Type);
-    return Type;
+    const Name = _Name(...args);
+    if (newFunction) newFunction(Name);
+    return Name;
   };
-  oldFunction.type.displayName = _Type.displayName;
-  if (patched) oldFunction.type.patched = true;
+  oldFunction[name].displayName = _Name.displayName;
+  if (patched) oldFunction[name].patched = true;
 };

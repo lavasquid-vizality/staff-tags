@@ -10,7 +10,7 @@ import isStaff from './modules/isStaff';
 import ReactPatch from './modules/ReactPatch';
 import { defaultSettings } from './constants';
 
-const { overflow } = getModule('overflow');
+const { overflow } = getModule((m => m.overflow && Object.keys(m).length === 1));
 const { headerTagNoNickname, headerTagWithNickname } = getModule('headerTag');
 const { nameTagWithCustomStatus, nameTagNoCustomStatus } = getModule('nameTag', 'additionalActionsIcon');
 
@@ -56,9 +56,9 @@ export default class extends Plugin {
     patch(getModule(m => m.type?.displayName === 'UserPopoutContainer'), 'type', (args, res) => {
       const { guildId, channelId, userId } = args[0];
 
-      ReactPatch(res, Type => {
-        ReactPatch(findInReactTree(Type, m => m.type?.displayName === 'UserPopoutInfo'), Type => {
-          ReactPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), null, () => ({ guildId, channelId, userId }));
+      ReactPatch(res, 'type', Type => {
+        ReactPatch(findInReactTree(Type, m => m.type?.displayName === 'UserPopoutInfo'), 'type', Type => {
+          ReactPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), 'type', null, () => ({ guildId, channelId, userId }));
         });
       });
 
@@ -68,8 +68,8 @@ export default class extends Plugin {
     patch(getModule(m => m.default?.displayName === 'UserProfileModal'), 'default', (args, res) => {
       const { guildId, user: { id: userId } } = args[0];
 
-      ReactPatch(findInReactTree(res, m => m.type?.displayName === 'UserProfileModalHeader'), Type => {
-        ReactPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), null, () => ({ guildId, userId }), true);
+      ReactPatch(findInReactTree(res, m => m.type?.displayName === 'UserProfileModalHeader'), 'type', Type => {
+        ReactPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), 'type', null, () => ({ guildId, userId }), true);
       });
 
       return res;
