@@ -7,7 +7,7 @@ import { findInReactTree } from '@vizality/util/react';
 import { OverflowTooltip } from './components/OverflowTooltip';
 
 import isStaff from './modules/isStaff';
-import ReactPatch from './modules/ReactPatch';
+import TempPatch from './modules/TempPatch';
 import { defaultSettings } from './constants';
 
 const { overflow } = getModule((m => m.overflow && Object.keys(m).length === 1));
@@ -56,9 +56,9 @@ export default class extends Plugin {
     patch(getModule(m => m.type?.displayName === 'UserPopoutContainer'), 'type', (args, res) => {
       const { guildId, channelId, userId } = args[0];
 
-      ReactPatch(res, 'type', Type => {
-        ReactPatch(findInReactTree(Type, m => m.type?.displayName === 'UserPopoutInfo'), 'type', Type => {
-          ReactPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), 'type', null, () => ({ guildId, channelId, userId }));
+      TempPatch(res, 'type', Type => {
+        TempPatch(findInReactTree(Type, m => m.type?.displayName === 'UserPopoutInfo'), 'type', Type => {
+          TempPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), 'type', null, () => ({ guildId, channelId, userId }));
         });
       });
 
@@ -68,8 +68,8 @@ export default class extends Plugin {
     patch(getModule(m => m.default?.displayName === 'UserProfileModal'), 'default', (args, res) => {
       const { guildId, user: { id: userId } } = args[0];
 
-      ReactPatch(findInReactTree(res, m => m.type?.displayName === 'UserProfileModalHeader'), 'type', Type => {
-        ReactPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), 'type', null, () => ({ guildId, userId }), true);
+      TempPatch(findInReactTree(res, m => m.type?.displayName === 'UserProfileModalHeader'), 'type', Type => {
+        TempPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), 'type', null, () => ({ guildId, userId }));
       });
 
       return res;

@@ -1,6 +1,6 @@
-export default (oldFunction, name, newFunction, newArgsFunction, patched) => {
+export default (oldFunction, name, newFunction, newArgsFunction) => {
   const _Name = oldFunction?.[name];
-  if (!_Name || typeof _Name !== 'function' || _Name.patched) return;
+  if (!_Name || typeof _Name !== 'function') return;
   oldFunction[name] = (...args) => {
     if (newArgsFunction) {
       const newArgs = newArgsFunction(...args);
@@ -14,5 +14,4 @@ export default (oldFunction, name, newFunction, newArgsFunction, patched) => {
     return Name;
   };
   oldFunction[name].displayName = _Name.displayName;
-  if (patched) oldFunction[name].patched = true;
 };
