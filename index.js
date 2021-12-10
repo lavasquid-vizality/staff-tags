@@ -58,8 +58,14 @@ export default class extends Plugin {
 
       TempPatch(res, 'type', Type => {
         TempPatch(findInReactTree(Type, m => m.type?.displayName === 'UserPopoutInfo'), 'type', Type => {
-          TempPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), 'type', null, () => ({ guildId, channelId, userId }));
+          TempPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), 'type', (_Type, Args) => {
+            Args.guildId = guildId;
+            Args.channelId = channelId;
+            Args.userId = userId;
+          }, true);
+          return Type;
         });
+        return Type;
       });
 
       return res;
@@ -69,7 +75,11 @@ export default class extends Plugin {
       const { guildId, user: { id: userId } } = args[0];
 
       TempPatch(findInReactTree(res, m => m.type?.displayName === 'UserProfileModalHeader'), 'type', Type => {
-        TempPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), 'type', null, () => ({ guildId, userId }));
+        TempPatch(findInReactTree(Type, m => m.type?.displayName === 'DiscordTag'), 'type', (_Type, Args) => {
+          Args.guildId = guildId;
+          Args.userId = userId;
+        }, true);
+        return Type;
       });
 
       return res;
