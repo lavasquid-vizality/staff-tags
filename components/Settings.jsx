@@ -3,7 +3,7 @@ import { Category, TextInput, SwitchItem } from '@vizality/components/settings';
 import { Divider } from '@vizality/components';
 import { getModule } from '@vizality/webpack';
 
-import { defaultSettings } from '../constants';
+import { DefaultSettings } from '../constants';
 
 const styleTagDiv = { textTransform: 'none', fontSize: '14px', fontWeight: 400 };
 
@@ -20,25 +20,25 @@ export default memo(({ getSetting, updateSetting, toggleSetting }) => {
       opened
     >
       <TextInput
-        defaultValue={getSetting('TNOwner', defaultSettings.TNOwner)}
+        defaultValue={getSetting('TNOwner', DefaultSettings.TNOwner)}
         onChange={value => { updateSetting('TNOwner', value); PreviewMLItem.current.forceUpdate(); }}
       >
         {<div style={styleTagDiv}>{'Tag name for Owner'}</div>}
       </TextInput>
       <TextInput
-        defaultValue={getSetting('TNThreadCreator', defaultSettings.TNThreadCreator)}
+        defaultValue={getSetting('TNThreadCreator', DefaultSettings.TNThreadCreator)}
         onChange={value => { updateSetting('TNThreadCreator', value); PreviewMLItem.current.forceUpdate(); }}
       >
         {<div style={styleTagDiv}>{'Tag name for Thread Creator'}</div>}
       </TextInput>
       <TextInput
-        defaultValue={getSetting('TNAdmin', defaultSettings.TNAdmin)}
+        defaultValue={getSetting('TNAdmin', DefaultSettings.TNAdmin)}
         onChange={value => { updateSetting('TNAdmin', value); PreviewMLItem.current.forceUpdate(); }}
       >
         {<div style={styleTagDiv}>{'Tag name for Admin'}</div>}
       </TextInput>
       <TextInput
-        defaultValue={getSetting('TNManagement', defaultSettings.TNManagement)}
+        defaultValue={getSetting('TNManagement', DefaultSettings.TNManagement)}
         onChange={value => { updateSetting('TNManagement', value); PreviewMLItem.current.forceUpdate(); }}
       >
         {<div style={styleTagDiv}>{'Tag name for Management'}</div>}
@@ -54,7 +54,7 @@ export default memo(({ getSetting, updateSetting, toggleSetting }) => {
       }</div>
       <Divider style={{ marginTop: '10px', marginBottom: '15px' }} />
       <SwitchItem
-        value={getSetting('TNIcons', defaultSettings.TNIcons)}
+        value={getSetting('TNIcons', DefaultSettings.TNIcons)}
         onChange={() => { toggleSetting('TNIcons'); PreviewMLItem.current.forceUpdate(); }}
       >
         {'Icons in Member List'}
@@ -65,19 +65,19 @@ export default memo(({ getSetting, updateSetting, toggleSetting }) => {
       opened
     >
       <SwitchItem
-        value={getSetting('MLShow', defaultSettings.MLShow)}
+        value={getSetting('MLShow', DefaultSettings.MLShow)}
         onChange={() => { toggleSetting('MLShow'); PreviewMLItem.current.forceUpdate(); }}
       >
         {'Member List'}
       </SwitchItem>
       <SwitchItem
-        value={getSetting('UPShow', defaultSettings.UPShow)}
+        value={getSetting('UPShow', DefaultSettings.UPShow)}
         onChange={() => toggleSetting('UPShow')}
       >
         {'User Popout'}
       </SwitchItem>
       <SwitchItem
-        value={getSetting('UMShow', defaultSettings.UMShow)}
+        value={getSetting('UMShow', DefaultSettings.UMShow)}
         onChange={() => toggleSetting('UMShow')}
       >
         {'User Modal'}

@@ -3,9 +3,9 @@ import React, { memo } from 'react';
 import { getModule } from '@vizality/webpack';
 import { isEmptyObject } from '@vizality/util/object';
 
-import { FakeBotTagTooltip } from '../components/FakeBotTagTooltip';
+import FakeBotTagTooltip from '../components/FakeBotTagTooltip';
 
-import { CheckPermissions, defaultSettings } from '../constants';
+import { CheckPermissions, DefaultSettings } from '../constants';
 
 const { getGuild } = getModule(m => m.getGuild);
 const { getChannel } = getModule(m => m.getChannel && m.hasChannel);
@@ -32,11 +32,11 @@ export default function (guildId, channelId, userId, place) {
   if (place === 'None' || guildId === '@me' && !SettingsPreview) return;
 
   const tagNames = {
-    Owner: this.settings.get('TNOwner', defaultSettings.TNOwner),
-    ThreadCreator: this.settings.get('TNThreadCreator', defaultSettings.TNThreadCreator),
-    Admin: this.settings.get('TNAdmin', defaultSettings.TNAdmin),
-    Management: this.settings.get('TNManagement', defaultSettings.TNManagement),
-    Icons: place === 'MemberList' ? this.settings.get('TNIcons', defaultSettings.TNIcons) : false
+    Owner: this.settings.get('TNOwner', DefaultSettings.TNOwner),
+    ThreadCreator: this.settings.get('TNThreadCreator', DefaultSettings.TNThreadCreator),
+    Admin: this.settings.get('TNAdmin', DefaultSettings.TNAdmin),
+    Management: this.settings.get('TNManagement', DefaultSettings.TNManagement),
+    Icons: place === 'MemberList' ? this.settings.get('TNIcons', DefaultSettings.TNIcons) : false
   };
 
   if (SettingsPreview) {

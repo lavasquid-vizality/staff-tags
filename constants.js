@@ -21,7 +21,7 @@ export const CheckPermissions = Object.freeze({
   // Nicknames: Permissions.MANAGE_NICKNAMES
 });
 
-export const defaultSettings = Object.freeze({
+export const DefaultSettings = Object.freeze({
   TNOwner: 'Owner',
   TNThreadCreator: 'Thread Creator',
   TNAdmin: 'Admin',

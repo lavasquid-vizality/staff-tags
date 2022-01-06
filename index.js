@@ -4,17 +4,17 @@ import { patch } from '@vizality/patcher';
 import { getModule } from '@vizality/webpack';
 import { findInReactTree } from '@vizality/util/react';
 
-import { OverflowTooltip } from './components/OverflowTooltip';
+import OverflowTooltip from './components/OverflowTooltip';
 
 import isStaff from './modules/isStaff';
 import TempPatch from './modules/TempPatch';
-import { defaultSettings } from './constants';
+import { DefaultSettings } from './constants';
 
 const { overflow } = getModule((m => m.overflow && Object.keys(m).length === 1));
 const { headerTagNoNickname, headerTagWithNickname } = getModule('headerTag');
 const { nameTagWithCustomStatus, nameTagNoCustomStatus } = getModule('nameTag', 'additionalActionsIcon');
 
-export default class extends Plugin {
+export default class StaffTags extends Plugin {
   start () {
     this.injectStyles('./style.css');
     this.patch();
@@ -37,7 +37,7 @@ export default class extends Plugin {
 
     // Member List (Bot Tag, Crown, Nitro)
     patch(getModule(m => m.displayName === 'MemberListItem').prototype, 'renderDecorators', (args, res, _this) => {
-      if (!this.settings.get('MLShow', defaultSettings.MLShow)) return res;
+      if (!this.settings.get('MLShow', DefaultSettings.MLShow)) return res;
 
       for (const [ index, child ] of res.props.children.entries()) {
         if (child?.props.text === 'Server Owner') res.props.children[index] = null;
@@ -90,11 +90,11 @@ export default class extends Plugin {
       const { className, guildId, channelId, userId } = args[0];
 
       if (userId || location.pathname === '/vizality/plugin/staff-tags/settings') {
-        const place = (className === headerTagNoNickname && this.settings.get('UPShow', defaultSettings.UPShow))
+        const place = (className === headerTagNoNickname && this.settings.get('UPShow', DefaultSettings.UPShow))
           ? 'UserPopout'
-          : (className === headerTagWithNickname && this.settings.get('UPShow', defaultSettings.UPShow))
+          : (className === headerTagWithNickname && this.settings.get('UPShow', DefaultSettings.UPShow))
             ? 'UserPopoutNick'
-            : ((className === nameTagWithCustomStatus || className === nameTagNoCustomStatus) && this.settings.get('UMShow', defaultSettings.UMShow))
+            : ((className === nameTagWithCustomStatus || className === nameTagNoCustomStatus) && this.settings.get('UMShow', DefaultSettings.UMShow))
               ? (!res.props.className.endsWith(' userModalName') ? res.props.className += ' userModalName' : 'None', 'UserModal')
               : 'None';
 

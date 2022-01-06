@@ -3,7 +3,7 @@ import { getModule } from '@vizality/webpack';
 
 const Tooltip = getModule(m => m.displayName === 'Tooltip');
 
-export const OverflowTooltip = memo(({ text, tooltipText, className, ...rest }) => {
+export default memo(({ text, tooltipText, className, ...rest }) => {
   const myDiv = createRef();
 
   return <Tooltip text={tooltipText} {...rest}>{props => {
