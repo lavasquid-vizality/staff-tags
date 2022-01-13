@@ -1,6 +1,6 @@
 import React, { memo, createRef } from 'react';
-import { Category, TextInput, SwitchItem } from '@vizality/components/settings';
 import { Divider } from '@vizality/components';
+import { Category, TextInput, SwitchItem } from '@vizality/components/settings';
 import { getModule } from '@vizality/webpack';
 
 import { DefaultSettings } from '../constants';

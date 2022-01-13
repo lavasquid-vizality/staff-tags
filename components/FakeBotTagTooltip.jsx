@@ -13,7 +13,7 @@ const { ownerIcon, icon } = getModule('ownerIcon');
 
 const FakeBotTag = memo(({ place, color, className, props, text }) => {
   const { botTag: botTagML } = getModule('botTag', 'member');
-  const { botTag: botTagUM } = getModule('botTag', 'additionalActionsIcon');
+  const { botTag: botTagUM } = getModule('botTag', 'additionalActionsIcon') ?? {};
   const { headerBotTag, headerBotTagWithNickname } = getModule('headerBotTag');
   const { bot } = getModule('bot');
 

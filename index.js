@@ -1,6 +1,7 @@
 import React from 'react';
 import { Plugin } from '@vizality/entities';
 import { patch } from '@vizality/patcher';
+import { Messages } from '@vizality/i18n';
 import { getModule } from '@vizality/webpack';
 import { findInReactTree } from '@vizality/util/react';
 
@@ -8,11 +9,11 @@ import OverflowTooltip from './components/OverflowTooltip';
 
 import isStaff from './modules/isStaff';
 import TempPatch from './modules/TempPatch';
+import patchModalLazy from './modules/patchModalLazy';
 import { DefaultSettings } from './constants';
 
 const { overflow } = getModule((m => m.overflow && Object.keys(m).length === 1));
 const { headerTagNoNickname, headerTagWithNickname } = getModule('headerTag');
-const { nameTagWithCustomStatus, nameTagNoCustomStatus } = getModule('nameTag', 'additionalActionsIcon');
 
 export default class StaffTags extends Plugin {
   start () {
@@ -40,7 +41,7 @@ export default class StaffTags extends Plugin {
       if (!this.settings.get('MLShow', DefaultSettings.MLShow)) return res;
 
       for (const [ index, child ] of res.props.children.entries()) {
-        if (child?.props.text === 'Server Owner') res.props.children[index] = null;
+        if (child?.props.text === Messages.GUILD_OWNER) res.props.children[index] = null;
       }
 
       const { guildId, channel, user: { id: userId } } = _this.props;
@@ -71,7 +72,7 @@ export default class StaffTags extends Plugin {
       return res;
     });
     // User Modal
-    patch(getModule(m => m.default?.displayName === 'UserProfileModal'), 'default', (args, res) => {
+    patchModalLazy(getModule.bind(this, m => m.default?.displayName === 'UserProfileModal'), 'default', (args, res) => {
       const { guildId, user: { id: userId } } = args[0];
 
       TempPatch(findInReactTree(res, m => m.type?.displayName === 'UserProfileModalHeader'), 'type', Type => {
@@ -87,6 +88,8 @@ export default class StaffTags extends Plugin {
 
     // Name Tag
     patch(getModule(m => m.default?.displayName === 'NameTag'), 'default', (args, res) => {
+      const { nameTagWithCustomStatus, nameTagNoCustomStatus } = getModule('nameTag', 'additionalActionsIcon') ?? {};
+
       const { className, guildId, channelId, userId } = args[0];
 
       if (userId || location.pathname === '/vizality/plugin/staff-tags/settings') {
