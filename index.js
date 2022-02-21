@@ -12,8 +12,9 @@ import TempPatch from './modules/TempPatch';
 import patchModalLazy from './modules/patchModalLazy';
 import { DefaultSettings } from './constants';
 
-const { overflow } = getModule((m => m.overflow && Object.keys(m).length === 1));
+const { overflow } = getModule(m => m.overflow && Object.keys(m).length === 1);
 const { headerTagNoNickname, headerTagWithNickname } = getModule('headerTag');
+let { nameTagNoCustomStatus, nameTagWithCustomStatus } = getModule('nameTag', 'additionalActionsIcon') ?? {};
 
 export default class StaffTags extends Plugin {
   start () {
@@ -88,16 +89,16 @@ export default class StaffTags extends Plugin {
 
     // Name Tag
     patch(getModule(m => m.default?.displayName === 'NameTag'), 'default', (args, res) => {
-      const { nameTagWithCustomStatus, nameTagNoCustomStatus } = getModule('nameTag', 'additionalActionsIcon') ?? {};
+      if (!nameTagNoCustomStatus) ({ nameTagNoCustomStatus, nameTagWithCustomStatus } = getModule('nameTag', 'additionalActionsIcon') ?? {});
 
       const { className, guildId, channelId, userId } = args[0];
 
       if (userId || location.pathname === '/vizality/plugin/staff-tags/settings') {
-        const place = (className === headerTagNoNickname && this.settings.get('UPShow', DefaultSettings.UPShow))
+        const place = className === headerTagNoNickname && this.settings.get('UPShow', DefaultSettings.UPShow)
           ? 'UserPopout'
-          : (className === headerTagWithNickname && this.settings.get('UPShow', DefaultSettings.UPShow))
+          : className === headerTagWithNickname && this.settings.get('UPShow', DefaultSettings.UPShow)
             ? 'UserPopoutNick'
-            : ((className === nameTagWithCustomStatus || className === nameTagNoCustomStatus) && this.settings.get('UMShow', DefaultSettings.UMShow))
+            : (className === nameTagNoCustomStatus || className === nameTagWithCustomStatus) && this.settings.get('UMShow', DefaultSettings.UMShow)
               ? (!res.props.className.endsWith(' userModalName') ? res.props.className += ' userModalName' : 'None', 'UserModal')
               : 'None';
 

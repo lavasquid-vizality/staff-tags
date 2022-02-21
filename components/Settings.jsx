@@ -11,8 +11,10 @@ const PreviewMLItem = createRef();
 const MemberListItem = getModule(m => m.displayName === 'MemberListItem');
 const UserMention = getModule(m => m.displayName === 'UserMention');
 
+const { getCurrentUser } = getModule(m => m.getCurrentUser);
+
 export default memo(({ getSetting, updateSetting, toggleSetting }) => {
-  const user = getModule(m => m.getCurrentUser).getCurrentUser();
+  const user = getCurrentUser();
 
   return <>
     <Category

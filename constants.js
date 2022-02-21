@@ -1,24 +1,26 @@
 /* eslint-disable multiline-comment-style */
-import { Permissions } from '@vizality/discord/constants';
+import { getModule } from '@vizality/webpack';
 
-export const Colors = {
+const Constants = getModule(m => m.API_HOST);
+
+export const Colors = Object.freeze({
   Owner: '#FAA61A', // Gold (Owner)
   ThreadCreator: '#FFBD00', // Lighter Gold (Thread Creator)
   Admin: '#C0C0C0', // Silver (Admin)
   Management: '#CD7F32' // Bronze (Management)
-};
+});
 
 export const CheckPermissions = Object.freeze({
-  Administrator: Permissions.ADMINISTRATOR,
-  Guild: Permissions.MANAGE_GUILD,
-  Channels: Permissions.MANAGE_CHANNELS,
-  Threads: Permissions.MANAGE_THREADS,
-  Messages: Permissions.MANAGE_MESSAGES
-  // Webhooks: Permissions.MANAGE_WEBHOOKS,
-  // Events: Permissions.MANAGE_EVENTS,
-  // Roles: Permissions.MANAGE_ROLES,
-  // EmojisAndStickers: Permissions.MANAGE_EMOJIS_AND_STICKERS,
-  // Nicknames: Permissions.MANAGE_NICKNAMES
+  Administrator: Constants.Permissions.ADMINISTRATOR,
+  Guild: Constants.Permissions.MANAGE_GUILD,
+  Channels: Constants.Permissions.MANAGE_CHANNELS,
+  Threads: Constants.Permissions.MANAGE_THREADS,
+  Messages: Constants.Permissions.MANAGE_MESSAGES
+  // Webhooks: Constants.Permissions.MANAGE_WEBHOOKS,
+  // Events: Constants.Permissions.MANAGE_EVENTS,
+  // Roles: Constants.Permissions.MANAGE_ROLES,
+  // EmojisAndStickers: Constants.Permissions.MANAGE_EMOJIS_AND_STICKERS,
+  // Nicknames: Constants.Permissions.MANAGE_NICKNAMES
 });
 
 export const DefaultSettings = Object.freeze({

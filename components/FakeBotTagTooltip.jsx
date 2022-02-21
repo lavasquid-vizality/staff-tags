@@ -10,12 +10,13 @@ const Crown = getModule(m => m.displayName === 'Crown');
 const BotTag = getModule(m => m.displayName === 'BotTag');
 
 const { ownerIcon, icon } = getModule('ownerIcon');
+const { botTag: botTagML } = getModule('botTag', 'member');
+const { headerBotTag, headerBotTagWithNickname } = getModule('headerBotTag');
+const { bot } = getModule('bot');
+let { botTag: botTagUM } = getModule('botTag', 'additionalActionsIcon') ?? {};
 
 const FakeBotTag = memo(({ place, color, className, props, text }) => {
-  const { botTag: botTagML } = getModule('botTag', 'member');
-  const { botTag: botTagUM } = getModule('botTag', 'additionalActionsIcon') ?? {};
-  const { headerBotTag, headerBotTagWithNickname } = getModule('headerBotTag');
-  const { bot } = getModule('bot');
+  if (!botTagUM) ({ botTag: botTagUM } = getModule('botTag', 'additionalActionsIcon') ?? {});
 
   const classes = place === 'MemberList'
     ? botTagML
