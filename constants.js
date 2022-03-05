@@ -4,8 +4,8 @@ import { getModule } from '@vizality/webpack';
 const Constants = getModule(m => m.API_HOST);
 
 export const Colors = Object.freeze({
-  Owner: '#FAA61A', // Gold (Owner)
-  ThreadCreator: '#FFBD00', // Lighter Gold (Thread Creator)
+  Owner: Constants.Colors.STATUS_YELLOW, // Gold (Owner)
+  ThreadCreator: Constants.Colors.PREMIUM_PERK_YELLOW, // Lighter Gold (Thread Creator)
   Admin: '#C0C0C0', // Silver (Admin)
   Management: '#CD7F32' // Bronze (Management)
 });
@@ -15,11 +15,12 @@ export const CheckPermissions = Object.freeze({
   Guild: Constants.Permissions.MANAGE_GUILD,
   Channels: Constants.Permissions.MANAGE_CHANNELS,
   Threads: Constants.Permissions.MANAGE_THREADS,
-  Messages: Constants.Permissions.MANAGE_MESSAGES
+  Messages: Constants.Permissions.MANAGE_MESSAGES,
+  Members: Constants.Permissions.MODERATE_MEMBERS
   // Webhooks: Constants.Permissions.MANAGE_WEBHOOKS,
   // Events: Constants.Permissions.MANAGE_EVENTS,
   // Roles: Constants.Permissions.MANAGE_ROLES,
-  // EmojisAndStickers: Constants.Permissions.MANAGE_EMOJIS_AND_STICKERS,
+  // GuildExpressions: Constants.Permissions.MANAGE_GUILD_EXPRESSIONS,
   // Nicknames: Constants.Permissions.MANAGE_NICKNAMES
 });
 
