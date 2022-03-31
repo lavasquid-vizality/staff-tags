@@ -7,7 +7,7 @@ import { Colors } from '../constants';
 
 const Tooltip = getModule(m => m.displayName === 'Tooltip');
 const Crown = getModule(m => m.displayName === 'Crown');
-const BotTag = getModule(m => m.displayName === 'BotTag');
+const { default: BotTag } = getModule(m => m.BotTagTypes);
 
 const { ownerIcon, icon } = getModule('ownerIcon');
 const { botTag: botTagML } = getModule('botTag', 'member');
