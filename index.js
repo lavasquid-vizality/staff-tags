@@ -9,7 +9,7 @@ import OverflowTooltip from './components/OverflowTooltip';
 
 import isStaff from './modules/isStaff';
 import TempPatch from './modules/TempPatch';
-import patchModalLazy from './modules/patchModalLazy';
+import getModalLazy from './modules/getModalLazy';
 import { DefaultSettings } from './constants';
 
 const { overflow } = getModule(m => m.overflow && Object.keys(m).length === 1);
@@ -73,7 +73,7 @@ export default class StaffTags extends Plugin {
       return res;
     });
     // User Modal
-    patchModalLazy(getModule.bind(this, m => m.default?.displayName === 'UserProfileModal'), 'default', (args, res) => {
+    getModalLazy(getModule.bind(this, m => m.default?.displayName === 'UserProfileModal')).then(module => patch(module, 'default', (args, res) => {
       const { guildId, user: { id: userId } } = args[0];
 
       TempPatch(findInReactTree(res, m => m.type?.displayName === 'UserProfileModalHeader'), 'type', Type => {
@@ -85,7 +85,7 @@ export default class StaffTags extends Plugin {
       });
 
       return res;
-    });
+    }));
 
     // Name Tag
     patch(getModule(m => m.default?.displayName === 'NameTag'), 'default', (args, res) => {

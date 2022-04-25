@@ -1,7 +1,7 @@
 {
   "name": "Staff Tags",
   "description": "Adds staff tags for owner, thread creator, admin, management",
-  "version": "1.3.10",
+  "version": "1.4.0",
   "author": "LavaSquid",
   "license": "MIT"
 }
