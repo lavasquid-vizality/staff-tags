@@ -23,35 +23,40 @@ export default class StaffTags extends Plugin {
   }
 
   patch () {
-    // Name Tooltip if Overflow...
-    patch(getModule(m => m.displayName === 'MemberListItem').prototype, 'render', (args, res) => {
-      const name = res.props.name?.props.children;
-      if (!name) return res;
+    // Member List Item
+    const MemberListItem = patch(getModule(m => m.AVATAR_DECORATION_PADDING).default, 'type', (args, res) => {
+      // Name Tooltip if Overflow...
+      patch(res.type.prototype, 'render', (args, res) => {
+        const name = res.props.name?.props.children;
+        if (!name) return res;
 
-      const overflowProps = {
-        className: overflow,
-        'aria-label': false
-      };
-      res.props.name.props.children = <OverflowTooltip text={name} tooltipText={name} {...overflowProps} />;
+        const overflowProps = {
+          className: overflow,
+          'aria-label': false
+        };
+        res.props.name.props.children = <OverflowTooltip text={name} tooltipText={name} {...overflowProps} />;
 
-      return res;
-    });
+        return res;
+      });
 
-    // Member List (Bot Tag, Crown, Nitro)
-    patch(getModule(m => m.displayName === 'MemberListItem').prototype, 'renderDecorators', (args, res, _this) => {
-      if (!this.settings.get('MLShow', DefaultSettings.MLShow)) return res;
+      // Decorators
+      patch(res.type.prototype, 'renderDecorators', (args, res, _this) => {
+        if (!this.settings.get('MLShow', DefaultSettings.MLShow)) return res;
 
-      for (const [ index, child ] of res.props.children.entries()) {
-        if (child?.props.text === Messages.GUILD_OWNER) res.props.children[index] = null;
-      }
+        for (const [ index, child ] of res.props.children.entries()) {
+          if (child?.props.text === Messages.GUILD_OWNER) res.props.children[index] = null;
+        }
 
-      const { guildId, channel, user: { id: userId } } = _this.props;
-      const channelId = channel?.id;
+        const { guildId, channel, user: { id: userId } } = _this.props;
+        const channelId = channel?.id;
 
-      const FakeBotTagTooltip = isStaff.call(this, guildId, channelId, userId, 'MemberList');
-      if (FakeBotTagTooltip) res.props.children.splice(res.props.children.length - 2, 0, FakeBotTagTooltip);
+        const FakeBotTagTooltip = isStaff.call(this, guildId, channelId, userId, 'MemberList');
+        if (FakeBotTagTooltip) res.props.children.splice(res.props.children.length - 2, 0, FakeBotTagTooltip);
 
-      return res;
+        return res;
+      });
+
+      MemberListItem();
     });
 
     // User Popout
