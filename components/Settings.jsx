@@ -8,8 +8,8 @@ import { DefaultSettings } from '../constants';
 const styleTagDiv = { textTransform: 'none', fontSize: '14px', fontWeight: 400 };
 
 const PreviewMLItem = createRef();
-const MemberListItem = getModule(m => m.displayName === 'MemberListItem');
-const UserMention = getModule(m => m.displayName === 'UserMention');
+const MemberListItem = getModule(m => m.AVATAR_DECORATION_PADDING).default;
+const UserMention = getModule(m => m.default?.toString().includes('e.inlinePreview') && m.default.displayName !== 'RoleMention').default;
 
 const { getCurrentUser } = getModule(m => m.getCurrentUser);
 
